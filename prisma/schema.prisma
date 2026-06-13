@@ -1,0 +1,185 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  BUYER
+  LANDOWNER
+  ADMIN
+}
+
+enum SaleMode {
+  WHOLE
+  SUBDIVISION
+  BOTH
+}
+
+enum ListingStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum PlotStatus {
+  AVAILABLE
+  RESERVED
+  SOLD
+}
+
+enum BookingStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ServiceType {
+  FEASIBILITY_STUDY
+  SUBDIVISION_PLANNING
+  PLOT_PRICING_STRATEGY
+  PROJECT_LAUNCH_CONSULTATION
+}
+
+enum ServiceRequestStatus {
+  REQUESTED
+  IN_REVIEW
+  COMPLETED
+}
+
+model User {
+  id       String    @id @default(cuid())
+  name     String
+  email    String    @unique
+  role     UserRole
+  listings Listing[]
+
+  createdAt DateTime @default(now())
+}
+
+model Listing {
+  id             String        @id @default(cuid())
+  title          String
+  province       String
+  district       String
+  subdistrict    String
+  landArea       Float
+  lat            Float
+  lng            Float
+  wholeLandPrice Float
+  description    String
+  saleMode       SaleMode
+  status         ListingStatus @default(DRAFT)
+
+  ownerId        String
+  owner          User          @relation(fields: [ownerId], references: [id])
+
+  images          ListingImage[]
+  subdivision     SubdivisionProject?
+  feasibilities   FeasibilityAnalysis[]
+  serviceRequests ServiceRequest[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ListingImage {
+  id        String  @id @default(cuid())
+  listingId String
+  listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  url       String
+  order     Int     @default(0)
+}
+
+model SubdivisionProject {
+  id        String  @id @default(cuid())
+  listingId String  @unique
+  listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  roadCost           Float @default(0)
+  infrastructureCost Float @default(0)
+  marketingCost      Float @default(0)
+
+  plots Plot[]
+
+  createdAt DateTime @default(now())
+}
+
+model Plot {
+  id        String             @id @default(cuid())
+  projectId String
+  project   SubdivisionProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  label  String
+  area   Float
+  width  Float
+  depth  Float
+  price  Float
+  status PlotStatus @default(AVAILABLE)
+  points String // SVG polygon points, e.g. "10,10 30,10 30,40 10,40"
+  perspectiveImages String // JSON array of { label: string, url: string }
+
+  bookings Booking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Booking {
+  id     String        @id @default(cuid())
+  plotId String
+  plot   Plot          @relation(fields: [plotId], references: [id], onDelete: Cascade)
+
+  name    String
+  phone   String
+  email   String
+  message String?
+  status  BookingStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+}
+
+model FeasibilityAnalysis {
+  id        String  @id @default(cuid())
+  listingId String
+  listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  // Inputs
+  landArea       Float
+  wholeLandPrice Float
+  numberOfPlots  Int
+  pricePerSqWah  Float
+
+  // Outputs
+  avgPlotPrice       Float
+  roadCost           Float
+  infrastructureCost Float
+  marketingCost      Float
+  wholeLandRevenue   Float
+  subdivisionRevenue Float
+  developmentCost    Float
+  netProfit          Float
+  roi                Float
+  profitDifference   Float
+  recommendation     String
+
+  createdAt DateTime @default(now())
+}
+
+model ServiceRequest {
+  id        String  @id @default(cuid())
+  listingId String
+  listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  serviceType ServiceType
+  status      ServiceRequestStatus @default(REQUESTED)
+  notes       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

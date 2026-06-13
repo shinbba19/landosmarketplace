@@ -39,3 +39,17 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/src/generated/prisma
+
+# database
+/prisma/*.db
+/prisma/*.db-journal
+/dev.db
+/dev.log
+
+# raw seed source files (may contain personal info)
+/Data for seed/
+
+# Claude Code local settings
+.claude/settings.local.json
