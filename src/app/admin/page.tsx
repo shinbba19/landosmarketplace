@@ -12,7 +12,7 @@ export default async function AdminPage() {
       orderBy: [{ project: { listingId: "asc" } }, { label: "asc" }],
     }),
     prisma.booking.findMany({
-      include: { plot: { include: { project: { include: { listing: true } } } } },
+      include: { plot: { include: { project: { include: { listing: true } } } }, listing: true },
       orderBy: { createdAt: "desc" },
     }),
     prisma.serviceRequest.findMany({
@@ -65,9 +65,9 @@ export default async function AdminPage() {
         }))}
         bookings={bookings.map((b) => ({
           id: b.id,
-          plotLabel: b.plot.label,
-          listingId: b.plot.project.listingId,
-          listingTitle: b.plot.project.listing.title,
+          plotLabel: b.plot?.label ?? null,
+          listingId: b.plot?.project.listingId ?? b.listingId ?? "",
+          listingTitle: b.plot?.project.listing.title ?? b.listing?.title ?? "",
           name: b.name,
           phone: b.phone,
           email: b.email,

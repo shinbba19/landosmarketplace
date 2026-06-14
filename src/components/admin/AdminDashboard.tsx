@@ -52,7 +52,7 @@ export interface AdminPlot {
 
 export interface AdminBooking {
   id: string;
-  plotLabel: string;
+  plotLabel: string | null;
   listingId: string;
   listingTitle: string;
   name: string;
@@ -322,10 +322,19 @@ function BookingsTab({ bookings }: { bookings: AdminBooking[] }) {
           {bookings.map((booking) => (
             <tr key={booking.id} className="border-b border-primary-50 last:border-0">
               <td className="px-4 py-3 text-foreground/70">
-                <Link href={`/listings/${booking.listingId}/subdivision`} className="hover:underline">
+                <Link
+                  href={
+                    booking.plotLabel
+                      ? `/listings/${booking.listingId}/subdivision`
+                      : `/listings/${booking.listingId}`
+                  }
+                  className="hover:underline"
+                >
                   {booking.listingTitle}
                 </Link>
-                <span className="ml-1 font-medium text-foreground">({booking.plotLabel})</span>
+                <span className="ml-1 font-medium text-foreground">
+                  ({booking.plotLabel ?? "ทั้งแปลง"})
+                </span>
               </td>
               <td className="px-4 py-3 font-medium text-foreground">{booking.name}</td>
               <td className="px-4 py-3 text-foreground/70">

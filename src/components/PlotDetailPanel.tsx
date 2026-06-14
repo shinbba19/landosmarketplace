@@ -2,6 +2,7 @@ import { formatCurrency, formatNumber, PLOT_STATUS_LABELS, PLOT_STATUS_COLORS } 
 import type { PerspectiveImage } from "@/lib/subdivision";
 import { PerspectiveGallery } from "@/components/PerspectiveGallery";
 import { BookingForm } from "@/components/BookingForm";
+import { createBooking } from "@/lib/actions/bookings";
 
 export interface PlotDetailData {
   id: string;
@@ -57,7 +58,11 @@ export function PlotDetailPanel({ plot }: { plot: PlotDetailData | null }) {
       <PerspectiveGallery images={plot.perspectiveImages} />
 
       {plot.status === "AVAILABLE" ? (
-        <BookingForm plotId={plot.id} plotLabel={plot.label} />
+        <BookingForm
+          action={createBooking.bind(null, plot.id)}
+          submitLabel={`จองแปลง ${plot.label}`}
+          successMessage={`ส่งคำขอจองแปลง ${plot.label} เรียบร้อยแล้ว เจ้าของที่ดินและผู้ดูแลระบบจะได้รับการแจ้งเตือน`}
+        />
       ) : (
         <div className="rounded-xl bg-zinc-50 p-4 text-sm text-foreground/60">
           แปลงนี้{plot.status === "RESERVED" ? "ถูกจองแล้ว" : "ขายแล้ว"} ไม่สามารถจองเพิ่มได้

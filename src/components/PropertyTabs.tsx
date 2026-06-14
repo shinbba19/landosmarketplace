@@ -3,12 +3,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import { SubdivisionMap, type SubdivisionMapPlot } from "@/components/SubdivisionMap";
+import { BookingForm } from "@/components/BookingForm";
 import {
   formatCurrency,
   formatNumber,
   PLOT_STATUS_LABELS,
 } from "@/lib/format";
 import { getRoadsForPlots } from "@/lib/subdivision";
+import { createListingBooking } from "@/lib/actions/bookings";
 
 type Tab = "whole" | "subdivision";
 
@@ -91,14 +93,13 @@ export function PropertyTabs({
                 </p>
               </div>
             </div>
-            <div className="flex flex-col gap-2 rounded-xl border border-primary-100 p-4 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-sm text-foreground/70">ติดต่อ: {ownerName}</p>
-              <a
-                href="mailto:somchai@landos.dev?subject=สอบถามที่ดิน"
-                className="rounded-full bg-primary-600 px-5 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-primary-700"
-              >
-                สอบถามเจ้าของที่ดิน
-              </a>
+            <div className="rounded-xl border border-primary-100 p-4">
+              <p className="mb-3 text-sm text-foreground/70">ติดต่อ: {ownerName}</p>
+              <BookingForm
+                action={createListingBooking.bind(null, listingId)}
+                submitLabel="จองที่ดินแปลงนี้"
+                successMessage="ส่งคำขอจองที่ดินเรียบร้อยแล้ว เจ้าของที่ดินและผู้ดูแลระบบจะได้รับการแจ้งเตือน"
+              />
             </div>
           </div>
         )}

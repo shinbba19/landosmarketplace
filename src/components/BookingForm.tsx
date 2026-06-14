@@ -1,14 +1,21 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { createBooking } from "@/lib/actions/bookings";
 
-export function BookingForm({ plotId, plotLabel }: { plotId: string; plotLabel: string }) {
+export function BookingForm({
+  action,
+  submitLabel,
+  successMessage,
+}: {
+  action: (formData: FormData) => Promise<void>;
+  submitLabel: string;
+  successMessage: string;
+}) {
   const formRef = useRef<HTMLFormElement>(null);
   const [submitted, setSubmitted] = useState(false);
 
   async function handleAction(formData: FormData) {
-    await createBooking(plotId, formData);
+    await action(formData);
     setSubmitted(true);
     formRef.current?.reset();
   }
@@ -16,7 +23,7 @@ export function BookingForm({ plotId, plotLabel }: { plotId: string; plotLabel: 
   if (submitted) {
     return (
       <div className="rounded-xl bg-primary-50 p-4 text-sm text-primary-700">
-        ส่งคำขอจองแปลง {plotLabel} เรียบร้อยแล้ว เจ้าของที่ดินและผู้ดูแลระบบจะได้รับการแจ้งเตือน
+        {successMessage}
       </div>
     );
   }
@@ -60,7 +67,7 @@ export function BookingForm({ plotId, plotLabel }: { plotId: string; plotLabel: 
         type="submit"
         className="rounded-full bg-primary-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-700"
       >
-        จองแปลง {plotLabel}
+        {submitLabel}
       </button>
     </form>
   );

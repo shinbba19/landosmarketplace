@@ -83,6 +83,7 @@ model Listing {
   subdivision     SubdivisionProject?
   feasibilities   FeasibilityAnalysis[]
   serviceRequests ServiceRequest[]
+  bookings        Booking[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -131,9 +132,11 @@ model Plot {
 }
 
 model Booking {
-  id     String        @id @default(cuid())
-  plotId String
-  plot   Plot          @relation(fields: [plotId], references: [id], onDelete: Cascade)
+  id        String  @id @default(cuid())
+  plotId    String?
+  plot      Plot?   @relation(fields: [plotId], references: [id], onDelete: Cascade)
+  listingId String?
+  listing   Listing? @relation(fields: [listingId], references: [id], onDelete: Cascade)
 
   name    String
   phone   String
