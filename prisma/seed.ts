@@ -55,7 +55,7 @@ async function main() {
       ownerId: landowner.id,
       images: {
         create: [
-          { url: "/listings/pakchong-musi/photo-1.jpg", order: 0 },
+          { url: "/listings/chiangmai/photo-1.jpg", order: 0 },
           { url: "/listings/pakchong-musi/photo-2.jpg", order: 1 },
           { url: "/listings/pakchong-musi/photo-3.jpg", order: 2 },
         ],
@@ -81,7 +81,7 @@ async function main() {
       ownerId: landowner.id,
       images: {
         create: [
-          { url: "/listings/pakchong-musi/photo-2.jpg", order: 0 },
+          { url: "/listings/nonthaburi/photo-1.jpg", order: 0 },
           { url: "/listings/pakchong-musi/photo-3.jpg", order: 1 },
         ],
       },
@@ -180,7 +180,7 @@ async function main() {
       ownerId: landowner.id,
       images: {
         create: [
-          { url: "/listings/pakchong-musi/photo-3.jpg", order: 0 },
+          { url: "/listings/chonburi/photo-1.jpg", order: 0 },
           { url: "/listings/pakchong-musi/photo-1.jpg", order: 1 },
           { url: "/listings/pakchong-musi/photo-2.jpg", order: 2 },
         ],
@@ -280,7 +280,7 @@ async function main() {
       ownerId: landowner.id,
       images: {
         create: [
-          { url: "/listings/pakchong-musi/photo-1.jpg", order: 0 },
+          { url: "/listings/phuket/photo-1.jpg", order: 0 },
           { url: "/listings/pakchong-musi/photo-3.jpg", order: 1 },
         ],
       },
