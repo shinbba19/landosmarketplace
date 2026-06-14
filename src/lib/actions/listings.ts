@@ -101,7 +101,11 @@ export async function createListing(formData: FormData) {
   const imageUrls =
     combinedUrls.length > 0
       ? combinedUrls
-      : [0, 1, 2].map((i) => `https://picsum.photos/seed/${listing.id}-${i}/1200/800`);
+      : [
+          "/listings/pakchong-musi/photo-1.jpg",
+          "/listings/pakchong-musi/photo-2.jpg",
+          "/listings/pakchong-musi/photo-3.jpg",
+        ];
 
   await prisma.listingImage.createMany({
     data: imageUrls.map((url, order) => ({ listingId: listing.id, url, order })),

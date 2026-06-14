@@ -51,12 +51,30 @@ export function getRoadsForPlots(labels: string[]): RoadRect[] {
   return labels.some((label) => label.startsWith("A")) ? STRIP_ROADS : GRID_ROADS;
 }
 
+/**
+ * Real on-site land photos used as placeholders wherever a plot doesn't yet
+ * have its own perspective shots.
+ */
+const FALLBACK_LAND_PHOTOS = [
+  "/listings/pakchong-musi/plots/a1-road.jpg",
+  "/listings/pakchong-musi/plots/a2-road.jpg",
+  "/listings/pakchong-musi/plots/a3-road.jpg",
+  "/listings/pakchong-musi/plots/a4-road.jpg",
+  "/listings/pakchong-musi/plots/a5-road.jpg",
+  "/listings/pakchong-musi/plots/a6-road.jpg",
+  "/listings/pakchong-musi/plots/a7-road.jpg",
+  "/listings/pakchong-musi/plots/a8-road.jpg",
+];
+
 export function defaultPerspectiveImages(seedPrefix: string) {
+  let hash = 0;
+  for (const char of seedPrefix) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
+  const url = FALLBACK_LAND_PHOTOS[hash % FALLBACK_LAND_PHOTOS.length];
   return JSON.stringify([
-    { label: "มุมมองจากถนน", url: `https://picsum.photos/seed/${seedPrefix}-road/900/600` },
-    { label: "มองเข้าสู่แปลง", url: `https://picsum.photos/seed/${seedPrefix}-into/900/600` },
-    { label: "มองออกจากแปลง", url: `https://picsum.photos/seed/${seedPrefix}-out/900/600` },
-    { label: "มุมมองด้านข้าง", url: `https://picsum.photos/seed/${seedPrefix}-corner/900/600` },
+    { label: "มุมมองจากถนน", url },
+    { label: "มองเข้าสู่แปลง", url },
+    { label: "มองออกจากแปลง", url },
+    { label: "มุมมองด้านข้าง", url },
   ]);
 }
 

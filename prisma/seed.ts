@@ -55,9 +55,9 @@ async function main() {
       ownerId: landowner.id,
       images: {
         create: [
-          { url: "https://picsum.photos/seed/landos-chiangmai-1/1200/800", order: 0 },
-          { url: "https://picsum.photos/seed/landos-chiangmai-2/1200/800", order: 1 },
-          { url: "https://picsum.photos/seed/landos-chiangmai-3/1200/800", order: 2 },
+          { url: "/listings/pakchong-musi/photo-1.jpg", order: 0 },
+          { url: "/listings/pakchong-musi/photo-2.jpg", order: 1 },
+          { url: "/listings/pakchong-musi/photo-3.jpg", order: 2 },
         ],
       },
     },
@@ -81,8 +81,8 @@ async function main() {
       ownerId: landowner.id,
       images: {
         create: [
-          { url: "https://picsum.photos/seed/landos-nonthaburi-1/1200/800", order: 0 },
-          { url: "https://picsum.photos/seed/landos-nonthaburi-2/1200/800", order: 1 },
+          { url: "/listings/pakchong-musi/photo-2.jpg", order: 0 },
+          { url: "/listings/pakchong-musi/photo-3.jpg", order: 1 },
         ],
       },
     },
@@ -180,9 +180,9 @@ async function main() {
       ownerId: landowner.id,
       images: {
         create: [
-          { url: "https://picsum.photos/seed/landos-chonburi-1/1200/800", order: 0 },
-          { url: "https://picsum.photos/seed/landos-chonburi-2/1200/800", order: 1 },
-          { url: "https://picsum.photos/seed/landos-chonburi-3/1200/800", order: 2 },
+          { url: "/listings/pakchong-musi/photo-3.jpg", order: 0 },
+          { url: "/listings/pakchong-musi/photo-1.jpg", order: 1 },
+          { url: "/listings/pakchong-musi/photo-2.jpg", order: 2 },
         ],
       },
     },
@@ -257,7 +257,7 @@ async function main() {
       status: "DRAFT",
       ownerId: landowner.id,
       images: {
-        create: [{ url: "https://picsum.photos/seed/landos-khonkaen-1/1200/800", order: 0 }],
+        create: [{ url: "/listings/pakchong-musi/photo-1.jpg", order: 0 }],
       },
     },
   });
@@ -280,8 +280,8 @@ async function main() {
       ownerId: landowner.id,
       images: {
         create: [
-          { url: "https://picsum.photos/seed/landos-phuket-1/1200/800", order: 0 },
-          { url: "https://picsum.photos/seed/landos-phuket-2/1200/800", order: 1 },
+          { url: "/listings/pakchong-musi/photo-1.jpg", order: 0 },
+          { url: "/listings/pakchong-musi/photo-3.jpg", order: 1 },
         ],
       },
     },
