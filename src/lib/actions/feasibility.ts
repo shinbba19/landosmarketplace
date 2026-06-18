@@ -8,6 +8,7 @@ export async function runFeasibility(listingId: string, formData: FormData) {
   const inputs: FeasibilityInputs = {
     landArea: Number(formData.get("landArea") ?? 0),
     wholeLandPrice: Number(formData.get("wholeLandPrice") ?? 0),
+    wholeLandSalePrice: Number(formData.get("wholeLandSalePrice") ?? 0),
     numberOfPlots: Number(formData.get("numberOfPlots") ?? 0),
     pricePerSqWah: Number(formData.get("pricePerSqWah") ?? 0),
   };

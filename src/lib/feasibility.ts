@@ -12,6 +12,7 @@ export const RECOMMENDATION_LABELS: Record<Recommendation, string> = {
 export interface FeasibilityInputs {
   landArea: number;
   wholeLandPrice: number;
+  wholeLandSalePrice: number;
   numberOfPlots: number;
   pricePerSqWah: number;
 }
@@ -52,7 +53,7 @@ export const ADMIN_COST_RATIO = 0.05;
 export function calculateFeasibility(
   inputs: FeasibilityInputs
 ): FeasibilityOutputs {
-  const { landArea, wholeLandPrice, numberOfPlots, pricePerSqWah } = inputs;
+  const { landArea, wholeLandPrice, wholeLandSalePrice, numberOfPlots, pricePerSqWah } = inputs;
 
   const sellableAreaSqWah = landArea * SQ_WAH_PER_RAI * (1 - ROAD_AREA_RATIO);
   const avgPlotPrice =
@@ -63,7 +64,7 @@ export function calculateFeasibility(
   const marketingCost = wholeLandPrice * ADMIN_COST_RATIO;
   const developmentCost = roadCost + infrastructureCost + marketingCost;
 
-  const wholeLandRevenue = wholeLandPrice;
+  const wholeLandRevenue = wholeLandSalePrice > 0 ? wholeLandSalePrice : wholeLandPrice;
   const subdivisionRevenue = numberOfPlots * avgPlotPrice;
   const netProfit = subdivisionRevenue - developmentCost;
   const roi = developmentCost > 0 ? (netProfit / developmentCost) * 100 : 0;

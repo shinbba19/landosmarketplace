@@ -3,6 +3,7 @@
 export interface FeasibilityFormDefaults {
   landArea: number;
   wholeLandPrice: number;
+  wholeLandSalePrice: number;
   numberOfPlots: number;
   pricePerSqWah: number;
 }
@@ -10,6 +11,7 @@ export interface FeasibilityFormDefaults {
 const fields: { name: keyof FeasibilityFormDefaults; label: string; step?: string }[] = [
   { name: "landArea", label: "ขนาดที่ดิน (ไร่)", step: "0.01" },
   { name: "wholeLandPrice", label: "ราคาซื้อที่ดิน (บาท)" },
+  { name: "wholeLandSalePrice", label: "ราคาขาย กรณีขายยกแปลง (บาท)" },
   { name: "numberOfPlots", label: "จำนวนแปลงที่ต้องการแบ่ง" },
   { name: "pricePerSqWah", label: "ราคาขายแปลงย่อย (บาท/ตร.ว.)" },
 ];

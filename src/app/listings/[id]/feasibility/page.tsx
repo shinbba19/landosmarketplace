@@ -34,6 +34,7 @@ export default async function FeasibilityPage({
   const defaults = {
     landArea: listing.landArea,
     wholeLandPrice: listing.wholeLandPrice,
+    wholeLandSalePrice: listing.wholeLandPrice,
     numberOfPlots,
     pricePerSqWah,
   };

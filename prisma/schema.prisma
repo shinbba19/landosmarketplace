@@ -153,10 +153,11 @@ model FeasibilityAnalysis {
   listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
 
   // Inputs
-  landArea       Float
-  wholeLandPrice Float
-  numberOfPlots  Int
-  pricePerSqWah  Float
+  landArea           Float
+  wholeLandPrice     Float
+  wholeLandSalePrice Float @default(0)
+  numberOfPlots      Int
+  pricePerSqWah      Float
 
   // Outputs
   avgPlotPrice       Float
