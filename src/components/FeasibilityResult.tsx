@@ -70,6 +70,15 @@ export function FeasibilityResult({
           </p>
         </div>
         <div className="rounded-xl bg-zinc-50 p-4">
+          <p className="text-xs text-foreground/60">ขนาดเฉลี่ยต่อแปลง</p>
+          <p className="mt-1 text-lg font-bold text-foreground">
+            {analysis.numberOfPlots > 0
+              ? formatNumber(Math.round(sellableAreaSqWah / analysis.numberOfPlots))
+              : "0"}{" "}
+            ตร.ว.
+          </p>
+        </div>
+        <div className="rounded-xl bg-zinc-50 p-4">
           <p className="text-xs text-foreground/60">ค่าสาธารณูปโภค (10% ของราคาที่ดิน)</p>
           <p className="mt-1 text-lg font-bold text-foreground">
             {formatCurrency(analysis.infrastructureCost)}
