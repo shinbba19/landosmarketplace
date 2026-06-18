@@ -137,6 +137,14 @@ export function FeasibilityResult({
           </span>
         </div>
         <div className="flex flex-wrap gap-2">
+          <a
+            href="https://landosv1.onrender.com/dashboard"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-full border border-zinc-300 bg-white px-5 py-2 text-center text-sm font-semibold text-zinc-700 hover:bg-zinc-50"
+          >
+            วิเคราห์ความเป็นไปได้แบบละเอียด
+          </a>
           <Link
             href={`/listings/${listingId}/service-request`}
             className="rounded-full border border-primary-300 bg-primary-50 px-5 py-2 text-center text-sm font-semibold text-primary-700 hover:bg-primary-100"
