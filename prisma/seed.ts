@@ -227,6 +227,7 @@ async function main() {
   const chonburiFeasibilityInputs = {
     landArea: chonburi.landArea,
     wholeLandPrice: chonburi.wholeLandPrice,
+    wholeLandSalePrice: chonburi.wholeLandPrice,
     numberOfPlots: chonburiPlots.length,
     pricePerSqWah: 7_000,
   };
