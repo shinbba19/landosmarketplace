@@ -6,7 +6,6 @@ import {
   SQ_WAH_PER_RAI,
   type Recommendation,
 } from "@/lib/feasibility";
-import { publishListing } from "@/lib/actions/listings";
 
 const RECOMMENDATION_STYLES: Record<Recommendation, string> = {
   CONSIDER_SUBDIVISION: "bg-primary-100 text-primary-700",
@@ -161,14 +160,12 @@ export function FeasibilityResult({
             ขอคำปรึกษาผู้เชี่ยวชาญ
           </Link>
           {listingStatus !== "PUBLISHED" && (
-            <form action={publishListing.bind(null, listingId)}>
-              <button
-                type="submit"
-                className="rounded-full bg-primary-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-700"
-              >
-                เผยแพร่ประกาศ
-              </button>
-            </form>
+            <Link
+              href={`/listings/${listingId}/edit`}
+              className="rounded-full bg-primary-600 px-5 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-primary-700"
+            >
+              กลับไปแก้ไขประกาศ
+            </Link>
           )}
         </div>
       </div>
