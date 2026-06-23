@@ -31,10 +31,10 @@ export default async function ServiceRequestPage({
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
       <div className="mb-6">
         <Link
-          href={`/listings/${listing.id}`}
+          href={listing.status === "PUBLISHED" ? `/listings/${listing.id}` : `/listings/${listing.id}/edit`}
           className="text-sm font-medium text-primary-700 hover:underline"
         >
-          ← กลับไปหน้ารายละเอียดที่ดิน
+          ← {listing.status === "PUBLISHED" ? "กลับไปหน้ารายละเอียดที่ดิน" : "กลับไปหน้าแก้ไขข้อมูล"}
         </Link>
         <h1 className="mt-2 text-2xl font-bold text-foreground sm:text-3xl">ขอคำปรึกษาผู้เชี่ยวชาญ</h1>
         <p className="mt-1 text-foreground/60">{listing.title}</p>
