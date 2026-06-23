@@ -83,6 +83,7 @@ export default async function ListingDetailPage({
             wholeLandPrice={listing.wholeLandPrice}
             ownerName={listing.owner.name}
             plots={plots}
+            boundary={listing.subdivision?.boundaryPoints}
           />
         </div>
       </div>

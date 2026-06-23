@@ -45,6 +45,8 @@ export default async function EditListingPage({
             area: p.area,
             price: p.price,
           })),
+          boundaryPoints: listing.subdivision?.boundaryPoints ?? undefined,
+          surveyImageUrl: listing.subdivision?.surveyImageUrl ?? undefined,
         }}
         submitLabels={{ publish: listing.status === "PUBLISHED" ? "บันทึกการเปลี่ยนแปลง" : "เผยแพร่ประกาศ" }}
       />

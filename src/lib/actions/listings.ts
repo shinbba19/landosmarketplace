@@ -66,19 +66,51 @@ function parsePlotInputs(formData: FormData): PlotFormInput[] {
   return plots;
 }
 
+interface BoundaryInput {
+  boundaryPoints: string | null;
+  surveyImageUrl: string | null;
+}
+
+async function parseBoundaryInput(formData: FormData, listingId: string): Promise<BoundaryInput> {
+  const boundaryPoints = String(formData.get("boundaryPoints") ?? "").trim() || null;
+
+  const surveyFiles = formData
+    .getAll("surveyImageFile")
+    .filter((entry): entry is File => entry instanceof File && entry.size > 0);
+
+  let surveyImageUrl: string | null = null;
+  if (surveyFiles.length > 0) {
+    const urls = await uploadListingImages(surveyFiles, `listings/${listingId}/survey`);
+    surveyImageUrl = urls[0] ?? null;
+  }
+
+  return { boundaryPoints, surveyImageUrl };
+}
+
 async function ensureSubdivisionProject(
   listingId: string,
   wholeLandPrice: number,
   plotInputs?: PlotFormInput[],
+  boundary?: BoundaryInput,
 ) {
   const existing = await prisma.subdivisionProject.findUnique({
     where: { listingId },
   });
-  if (existing) return existing;
+  if (existing) {
+    const updateData: Record<string, unknown> = {};
+    if (boundary?.boundaryPoints !== undefined) updateData.boundaryPoints = boundary.boundaryPoints;
+    if (boundary?.surveyImageUrl) updateData.surveyImageUrl = boundary.surveyImageUrl;
+    if (Object.keys(updateData).length > 0) {
+      await prisma.subdivisionProject.update({ where: { id: existing.id }, data: updateData });
+    }
+    return existing;
+  }
 
   const project = await prisma.subdivisionProject.create({
     data: {
       listingId,
+      boundaryPoints: boundary?.boundaryPoints ?? null,
+      surveyImageUrl: boundary?.surveyImageUrl ?? null,
       roadCost: 0,
       infrastructureCost: 0,
       marketingCost: 0,
@@ -162,7 +194,8 @@ export async function createListing(formData: FormData) {
   });
 
   if (fields.saleMode !== "WHOLE") {
-    await ensureSubdivisionProject(listing.id, fields.wholeLandPrice, plotInputs);
+    const boundary = await parseBoundaryInput(formData, listing.id);
+    await ensureSubdivisionProject(listing.id, fields.wholeLandPrice, plotInputs, boundary);
   }
 
   revalidatePath("/");
@@ -205,7 +238,8 @@ export async function updateListing(listingId: string, formData: FormData) {
   }
 
   if (fields.saleMode !== "WHOLE") {
-    await ensureSubdivisionProject(listingId, fields.wholeLandPrice, plotInputs);
+    const boundary = await parseBoundaryInput(formData, listingId);
+    await ensureSubdivisionProject(listingId, fields.wholeLandPrice, plotInputs, boundary);
   }
 
   revalidatePath("/");

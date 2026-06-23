@@ -102,6 +102,9 @@ model SubdivisionProject {
   listingId String  @unique
   listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
 
+  boundaryPoints String?
+  surveyImageUrl String?
+
   roadCost           Float @default(0)
   infrastructureCost Float @default(0)
   marketingCost      Float @default(0)

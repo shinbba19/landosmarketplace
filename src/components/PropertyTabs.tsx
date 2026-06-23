@@ -25,6 +25,7 @@ export function PropertyTabs({
   wholeLandPrice,
   ownerName,
   plots,
+  boundary,
 }: {
   listingId: string;
   saleMode: string;
@@ -32,6 +33,7 @@ export function PropertyTabs({
   wholeLandPrice: number;
   ownerName: string;
   plots: PropertyTabsPlot[];
+  boundary?: string | null;
 }) {
   const showWhole = saleMode === "WHOLE" || saleMode === "BOTH";
   const showSubdivision = saleMode === "SUBDIVISION" || saleMode === "BOTH";
@@ -113,7 +115,7 @@ export function PropertyTabs({
             ) : (
               <>
                 <div className="aspect-[5/4] w-full max-w-md">
-                  <SubdivisionMap plots={plots} roads={getRoadsForPlots(plots.map((p) => p.label))} />
+                  <SubdivisionMap plots={plots} roads={getRoadsForPlots(plots.map((p) => p.label))} boundary={boundary} />
                 </div>
                 <div className="grid grid-cols-3 gap-3 text-center text-sm">
                   <div className="rounded-xl bg-primary-50 p-3">

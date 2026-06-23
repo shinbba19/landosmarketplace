@@ -6,7 +6,13 @@ import { PlotDetailPanel, type PlotDetailData } from "@/components/PlotDetailPan
 import { PLOT_STATUS_LABELS } from "@/lib/format";
 import { getRoadsForPlots } from "@/lib/subdivision";
 
-export function SubdivisionExplorer({ plots }: { plots: PlotDetailData[] }) {
+export function SubdivisionExplorer({
+  plots,
+  boundary,
+}: {
+  plots: PlotDetailData[];
+  boundary?: string | null;
+}) {
   const [selectedPlotId, setSelectedPlotId] = useState<string | null>(plots[0]?.id ?? null);
   const roads = getRoadsForPlots(plots.map((p) => p.label));
 
@@ -28,6 +34,7 @@ export function SubdivisionExplorer({ plots }: { plots: PlotDetailData[] }) {
               selectedPlotId={selectedPlotId}
               onSelectPlot={setSelectedPlotId}
               roads={roads}
+              boundary={boundary}
             />
           </div>
         </div>

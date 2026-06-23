@@ -49,7 +49,7 @@ export default async function SubdivisionPage({
         <p className="mt-1 text-foreground/60">{listing.title}</p>
       </div>
 
-      <SubdivisionExplorer plots={plots} />
+      <SubdivisionExplorer plots={plots} boundary={listing.subdivision.boundaryPoints} />
     </div>
   );
 }

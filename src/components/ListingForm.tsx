@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { BoundaryEditor } from "@/components/BoundaryEditor";
 
 const SALE_MODE_OPTIONS = [
   { value: "WHOLE", label: "ขายยกแปลงเท่านั้น" },
@@ -27,6 +28,8 @@ export interface ListingFormValues {
   saleMode?: string;
   images?: string[];
   plots?: PlotInput[];
+  boundaryPoints?: string;
+  surveyImageUrl?: string;
 }
 
 function splitLandArea(totalRai: number) {
@@ -52,6 +55,9 @@ export function ListingForm({
   const [wah, setWah] = useState(String(initial.wah));
   const landArea = (Number(rai) || 0) + (Number(ngan) || 0) / 4 + (Number(wah) || 0) / 400;
 
+  const [surveyPreview, setSurveyPreview] = useState<string | null>(
+    initialValues?.surveyImageUrl ?? null,
+  );
   const [saleMode, setSaleMode] = useState(initialValues?.saleMode ?? "WHOLE");
   const defaultPlots = initialValues?.plots ?? [
     { label: "P1", area: 100, price: 0 },
@@ -231,6 +237,33 @@ export function ListingForm({
           />
         </div>
       </section>
+
+      {showSubdivision && (
+        <section className="flex flex-col gap-4 rounded-2xl border border-primary-100 bg-white p-5 shadow-sm">
+          <h2 className="text-lg font-bold text-foreground">ขอบเขตที่ดิน</h2>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-foreground/70">
+              อัปโหลดรูปโฉนด / แผนที่สำรวจ
+            </label>
+            <input
+              type="file"
+              name="surveyImageFile"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) setSurveyPreview(URL.createObjectURL(file));
+              }}
+              className="text-sm file:mr-3 file:rounded-full file:border-0 file:bg-primary-100 file:px-3 file:py-1 file:text-primary-700"
+            />
+          </div>
+
+          <BoundaryEditor
+            surveyImageUrl={surveyPreview}
+            initialBoundary={initialValues?.boundaryPoints}
+          />
+        </section>
+      )}
 
       {showSubdivision && (
         <section className="flex flex-col gap-4 rounded-2xl border border-primary-100 bg-white p-5 shadow-sm">

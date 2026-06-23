@@ -15,11 +15,13 @@ export function SubdivisionMap({
   selectedPlotId,
   onSelectPlot,
   roads = GRID_ROADS,
+  boundary,
 }: {
   plots: SubdivisionMapPlot[];
   selectedPlotId?: string | null;
   onSelectPlot?: (plotId: string) => void;
   roads?: RoadRect[];
+  boundary?: string | null;
 }) {
   return (
     <svg
@@ -27,6 +29,18 @@ export function SubdivisionMap({
       className="h-full w-full rounded-xl bg-zinc-100"
       preserveAspectRatio="xMidYMid meet"
     >
+      {/* Land boundary */}
+      {boundary && (
+        <polygon
+          points={boundary}
+          fill="#92400e"
+          fillOpacity={0.06}
+          stroke="#92400e"
+          strokeWidth={0.8}
+          strokeDasharray="2,1"
+        />
+      )}
+
       {/* Internal roads */}
       {roads.map((road, i) => (
         <g key={i}>
