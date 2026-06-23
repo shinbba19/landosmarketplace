@@ -238,7 +238,7 @@ export function ListingForm({
         </div>
       </section>
 
-      {showSubdivision && (
+      {false && showSubdivision && (
         <section className="flex flex-col gap-4 rounded-2xl border border-primary-100 bg-white p-5 shadow-sm">
           <h2 className="text-lg font-bold text-foreground">ขอบเขตที่ดิน</h2>
 
@@ -265,7 +265,7 @@ export function ListingForm({
         </section>
       )}
 
-      {showSubdivision && (
+      {false && showSubdivision && (
         <section className="flex flex-col gap-4 rounded-2xl border border-primary-100 bg-white p-5 shadow-sm">
           <h2 className="text-lg font-bold text-foreground">ข้อมูลแปลงย่อย</h2>
 
@@ -373,14 +373,16 @@ export function ListingForm({
         >
           {submitLabels.feasibility ?? "วิเคราะห์ความเป็นไปได้"}
         </button>
-        <button
-          type="submit"
-          name="intent"
-          value="publish"
-          className="rounded-full bg-primary-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-700"
-        >
-          {submitLabels.publish ?? "เผยแพร่ประกาศ"}
-        </button>
+        {!showSubdivision && (
+          <button
+            type="submit"
+            name="intent"
+            value="publish"
+            className="rounded-full bg-primary-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-700"
+          >
+            {submitLabels.publish ?? "เผยแพร่ประกาศ"}
+          </button>
+        )}
       </div>
     </form>
   );
