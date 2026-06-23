@@ -115,7 +115,7 @@ export function PropertyTabs({
             ) : (
               <>
                 <div className="aspect-[5/4] w-full max-w-md">
-                  <SubdivisionMap plots={plots} roads={getRoadsForPlots(plots.map((p) => p.label))} boundary={boundary} />
+                  <SubdivisionMap plots={plots} roads={boundary ? [] : getRoadsForPlots(plots.map((p) => p.label))} boundary={boundary} />
                 </div>
                 <div className="grid grid-cols-3 gap-3 text-center text-sm">
                   <div className="rounded-xl bg-primary-50 p-3">

@@ -45,8 +45,8 @@ function rectCornersInside(x: number, y: number, w: number, h: number, polygon: 
   );
 }
 
-const ROAD_GAP = 3;
-const PADDING = 2;
+const ROAD_GAP = 1.5;
+const PADDING = 1;
 
 /**
  * Generate plot rectangles that fit inside a boundary polygon.
@@ -67,19 +67,25 @@ export function generatePlotsInBoundary(
 
   if (innerW <= 0 || innerH <= 0) return [];
 
-  // Find best grid arrangement (cols x rows) that fits numPlots
+  const aspect = innerW / innerH;
+
+  // Pick grid that best matches the boundary aspect ratio
   let bestCols = 1;
   let bestRows = numPlots;
-  let bestCellArea = 0;
+  let bestScore = -1;
 
   for (let cols = 1; cols <= numPlots; cols++) {
     const rows = Math.ceil(numPlots / cols);
     const cellW = (innerW - ROAD_GAP * (cols - 1)) / cols;
     const cellH = (innerH - ROAD_GAP * (rows - 1)) / rows;
     if (cellW <= 0 || cellH <= 0) continue;
-    const area = cellW * cellH;
-    if (area > bestCellArea) {
-      bestCellArea = area;
+    // Prefer squarish cells that also match the bounding box shape
+    const gridAspect = (cols * (cellW + ROAD_GAP)) / (rows * (cellH + ROAD_GAP));
+    const aspectFit = 1 / (1 + Math.abs(Math.log(gridAspect / aspect)));
+    const cellSquareness = 1 / (1 + Math.abs(Math.log(cellW / cellH)));
+    const score = aspectFit * 2 + cellSquareness + cellW * cellH * 0.001;
+    if (score > bestScore) {
+      bestScore = score;
       bestCols = cols;
       bestRows = rows;
     }

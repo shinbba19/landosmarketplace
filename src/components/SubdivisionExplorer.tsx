@@ -14,7 +14,7 @@ export function SubdivisionExplorer({
   boundary?: string | null;
 }) {
   const [selectedPlotId, setSelectedPlotId] = useState<string | null>(plots[0]?.id ?? null);
-  const roads = getRoadsForPlots(plots.map((p) => p.label));
+  const roads = boundary ? [] : getRoadsForPlots(plots.map((p) => p.label));
 
   const selectedPlot = plots.find((p) => p.id === selectedPlotId) ?? null;
 
