@@ -30,12 +30,20 @@ export default async function MyListingsPage() {
           <h1 className="text-2xl font-bold text-foreground sm:text-3xl">ประกาศของฉัน</h1>
           <p className="mt-1 text-foreground/60">จัดการประกาศที่ดินที่คุณสร้างไว้</p>
         </div>
-        <Link
-          href="/listings/new"
-          className="rounded-full bg-primary-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-700"
-        >
-          + ลงประกาศใหม่
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href="/my-listings/bookings"
+            className="rounded-full border border-primary-300 bg-primary-50 px-5 py-2 text-sm font-semibold text-primary-700 hover:bg-primary-100"
+          >
+            การจองทั้งหมด
+          </Link>
+          <Link
+            href="/listings/new"
+            className="rounded-full bg-primary-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-700"
+          >
+            + ลงประกาศใหม่
+          </Link>
+        </div>
       </div>
 
       {listings.length === 0 ? (

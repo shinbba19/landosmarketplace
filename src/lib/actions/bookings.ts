@@ -30,6 +30,7 @@ export async function createBooking(plotId: string, formData: FormData) {
   revalidatePath(`/listings/${plot.project.listingId}/subdivision`);
   revalidatePath(`/listings/${plot.project.listingId}`);
   revalidatePath("/admin");
+  revalidatePath("/my-listings/bookings");
 }
 
 export async function createListingBooking(listingId: string, formData: FormData) {
@@ -39,6 +40,7 @@ export async function createListingBooking(listingId: string, formData: FormData
 
   revalidatePath(`/listings/${listingId}`);
   revalidatePath("/admin");
+  revalidatePath("/my-listings/bookings");
 }
 
 export async function setBookingStatus(bookingId: string, status: "APPROVED" | "REJECTED") {
@@ -61,4 +63,5 @@ export async function setBookingStatus(bookingId: string, status: "APPROVED" | "
   }
 
   revalidatePath("/admin");
+  revalidatePath("/my-listings/bookings");
 }
