@@ -47,10 +47,10 @@ export function ListingForm({
   submitLabels?: { draft?: string; feasibility?: string; publish?: string };
 }) {
   const initial = splitLandArea(initialValues?.landArea ?? 0);
-  const [rai, setRai] = useState(initial.rai);
-  const [ngan, setNgan] = useState(initial.ngan);
-  const [wah, setWah] = useState(initial.wah);
-  const landArea = rai + ngan / 4 + wah / 400;
+  const [rai, setRai] = useState(String(initial.rai));
+  const [ngan, setNgan] = useState(String(initial.ngan));
+  const [wah, setWah] = useState(String(initial.wah));
+  const landArea = (Number(rai) || 0) + (Number(ngan) || 0) / 4 + (Number(wah) || 0) / 400;
 
   const [saleMode, setSaleMode] = useState(initialValues?.saleMode ?? "WHOLE");
   const defaultPlots = initialValues?.plots ?? [
@@ -115,7 +115,7 @@ export function ListingForm({
               min="0"
               step="1"
               value={rai}
-              onChange={(e) => setRai(Number(e.target.value) || 0)}
+              onChange={(e) => setRai(e.target.value)}
               className="w-24 rounded-lg border border-primary-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400"
             />
             <span className="text-sm text-foreground/60">ไร่</span>
@@ -125,7 +125,7 @@ export function ListingForm({
               max="3"
               step="1"
               value={ngan}
-              onChange={(e) => setNgan(Number(e.target.value) || 0)}
+              onChange={(e) => setNgan(e.target.value)}
               className="w-20 rounded-lg border border-primary-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400"
             />
             <span className="text-sm text-foreground/60">งาน</span>
@@ -135,7 +135,7 @@ export function ListingForm({
               max="99"
               step="0.01"
               value={wah}
-              onChange={(e) => setWah(Number(e.target.value) || 0)}
+              onChange={(e) => setWah(e.target.value)}
               className="w-24 rounded-lg border border-primary-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400"
             />
             <span className="text-sm text-foreground/60">ตร.ว.</span>
