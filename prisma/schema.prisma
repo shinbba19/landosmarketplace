@@ -34,9 +34,10 @@ enum PlotStatus {
 }
 
 enum BookingStatus {
-  PENDING
-  APPROVED
-  REJECTED
+  INTERESTED
+  VIEWING
+  RESERVED
+  CANCELLED
 }
 
 enum ServiceType {
@@ -145,7 +146,7 @@ model Booking {
   phone   String
   email   String
   message String?
-  status  BookingStatus @default(PENDING)
+  status  BookingStatus @default(INTERESTED)
 
   createdAt DateTime @default(now())
 }

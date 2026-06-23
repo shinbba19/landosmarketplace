@@ -138,7 +138,7 @@ async function main() {
       phone: "081-234-5678",
       email: "kanda@example.com",
       message: "สนใจแปลง P3 ต้องการสอบถามเรื่องแบ่งจ่าย",
-      status: "PENDING",
+      status: "INTERESTED",
     },
   });
   await prisma.booking.create({
@@ -148,7 +148,7 @@ async function main() {
       phone: "089-876-5432",
       email: "thanakorn@example.com",
       message: "ขอจองแปลง P8 ครับ",
-      status: "PENDING",
+      status: "VIEWING",
     },
   });
   await prisma.booking.create({
@@ -158,7 +158,7 @@ async function main() {
       phone: "082-111-2222",
       email: "manee@example.com",
       message: "โอนเงินมัดจำเรียบร้อยแล้วค่ะ",
-      status: "APPROVED",
+      status: "RESERVED",
     },
   });
 

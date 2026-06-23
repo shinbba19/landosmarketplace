@@ -10,6 +10,7 @@ import {
   PLOT_STATUS_LABELS,
   PLOT_STATUS_COLORS,
   BOOKING_STATUS_LABELS,
+  BOOKING_STATUS_COLORS,
   SERVICE_TYPE_LABELS,
   SERVICE_REQUEST_STATUS_LABELS,
   USER_ROLE_LABELS,
@@ -368,35 +369,20 @@ function BookingsTab({ bookings }: { bookings: AdminBooking[] }) {
               </td>
               <td className="px-4 py-3 text-foreground/70">{booking.message ?? "-"}</td>
               <td className="px-4 py-3">
-                <span
-                  className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                    booking.status === "APPROVED"
-                      ? "bg-primary-100 text-primary-700"
-                      : booking.status === "REJECTED"
-                        ? "bg-red-100 text-red-700"
-                        : "bg-orange-100 text-orange-700"
-                  }`}
-                >
-                  {BOOKING_STATUS_LABELS[booking.status]}
-                </span>
-              </td>
-              <td className="px-4 py-3 text-right">
-                {booking.status === "PENDING" ? (
-                  <div className="flex justify-end gap-2">
-                    <form action={setBookingStatus.bind(null, booking.id, "APPROVED")}>
-                      <button type="submit" className="font-medium text-primary-700 hover:underline">
-                        อนุมัติ
-                      </button>
-                    </form>
-                    <form action={setBookingStatus.bind(null, booking.id, "REJECTED")}>
-                      <button type="submit" className="font-medium text-red-600 hover:underline">
-                        ปฏิเสธ
-                      </button>
-                    </form>
-                  </div>
-                ) : (
-                  <span className="text-foreground/40">-</span>
-                )}
+                <form action={setBookingStatus.bind(null, booking.id)}>
+                  <select
+                    name="status"
+                    defaultValue={booking.status}
+                    onChange={(e) => e.target.form?.requestSubmit()}
+                    className={`rounded-full border-0 px-3 py-1 text-xs font-semibold ${
+                      BOOKING_STATUS_COLORS[booking.status] ?? "bg-zinc-100 text-zinc-700"
+                    }`}
+                  >
+                    {(["INTERESTED", "VIEWING", "RESERVED", "CANCELLED"] as const).map((s) => (
+                      <option key={s} value={s}>{BOOKING_STATUS_LABELS[s]}</option>
+                    ))}
+                  </select>
+                </form>
               </td>
             </tr>
           ))}

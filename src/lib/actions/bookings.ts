@@ -9,7 +9,7 @@ function bookingFields(formData: FormData) {
     phone: String(formData.get("phone") ?? "").trim(),
     email: String(formData.get("email") ?? "").trim(),
     message: String(formData.get("message") ?? "").trim() || null,
-    status: "PENDING" as const,
+    status: "INTERESTED" as const,
   };
 }
 
@@ -43,7 +43,14 @@ export async function createListingBooking(listingId: string, formData: FormData
   revalidatePath("/my-listings/bookings");
 }
 
-export async function setBookingStatus(bookingId: string, status: "APPROVED" | "REJECTED") {
+const BOOKING_STATUSES = ["INTERESTED", "VIEWING", "RESERVED", "CANCELLED"] as const;
+type BookingStatus = (typeof BOOKING_STATUSES)[number];
+
+export async function setBookingStatus(bookingId: string, statusOrFormData: BookingStatus | FormData) {
+  const status = (statusOrFormData instanceof FormData
+    ? String(statusOrFormData.get("status"))
+    : statusOrFormData) as BookingStatus;
+  if (!BOOKING_STATUSES.includes(status)) return;
   const booking = await prisma.booking.findUniqueOrThrow({
     where: { id: bookingId },
     include: { plot: { include: { project: true } } },
@@ -52,10 +59,16 @@ export async function setBookingStatus(bookingId: string, status: "APPROVED" | "
   await prisma.booking.update({ where: { id: bookingId }, data: { status } });
 
   if (booking.plotId && booking.plot) {
-    await prisma.plot.update({
-      where: { id: booking.plotId },
-      data: { status: status === "APPROVED" ? "SOLD" : "AVAILABLE" },
-    });
+    const plotStatus =
+      status === "RESERVED" ? "RESERVED" as const :
+      status === "CANCELLED" ? "AVAILABLE" as const :
+      undefined;
+    if (plotStatus) {
+      await prisma.plot.update({
+        where: { id: booking.plotId },
+        data: { status: plotStatus },
+      });
+    }
     revalidatePath(`/listings/${booking.plot.project.listingId}/subdivision`);
     revalidatePath(`/listings/${booking.plot.project.listingId}`);
   } else if (booking.listingId) {

@@ -1,14 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { ROLE_USER_EMAIL } from "@/lib/roles";
-import { BOOKING_STATUS_LABELS } from "@/lib/format";
 import { OwnerBookingActions } from "@/components/OwnerBookingActions";
-
-const STATUS_STYLES: Record<string, string> = {
-  PENDING: "bg-orange-100 text-orange-700",
-  APPROVED: "bg-primary-100 text-primary-700",
-  REJECTED: "bg-red-100 text-red-700",
-};
 
 export default async function OwnerBookingsPage() {
   const owner = await prisma.user.findUnique({
@@ -63,7 +56,6 @@ export default async function OwnerBookingsPage() {
                 <th className="px-4 py-3">ติดต่อ</th>
                 <th className="px-4 py-3">ข้อความ</th>
                 <th className="px-4 py-3">สถานะ</th>
-                <th className="px-4 py-3"></th>
               </tr>
             </thead>
             <tbody>
@@ -94,13 +86,6 @@ export default async function OwnerBookingsPage() {
                     </td>
                     <td className="px-4 py-3 text-foreground/70">{booking.message ?? "-"}</td>
                     <td className="px-4 py-3">
-                      <span
-                        className={`rounded-full px-3 py-1 text-xs font-semibold ${STATUS_STYLES[booking.status] ?? STATUS_STYLES.PENDING}`}
-                      >
-                        {BOOKING_STATUS_LABELS[booking.status] ?? booking.status}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-right">
                       <OwnerBookingActions bookingId={booking.id} status={booking.status} />
                     </td>
                   </tr>

@@ -46,9 +46,17 @@ export const PLOT_STATUS_COLORS: Record<string, { fill: string; text: string; ba
 };
 
 export const BOOKING_STATUS_LABELS: Record<string, string> = {
-  PENDING: "รอดำเนินการ",
-  APPROVED: "ยืนยันแล้ว",
-  REJECTED: "ปฏิเสธ",
+  INTERESTED: "🟡 สนใจ",
+  VIEWING: "🟠 นัดชม",
+  RESERVED: "🟢 จองแล้ว",
+  CANCELLED: "🔴 ยกเลิก",
+};
+
+export const BOOKING_STATUS_COLORS: Record<string, string> = {
+  INTERESTED: "bg-yellow-100 text-yellow-700",
+  VIEWING: "bg-orange-100 text-orange-700",
+  RESERVED: "bg-primary-100 text-primary-700",
+  CANCELLED: "bg-red-100 text-red-700",
 };
 
 export const SERVICE_TYPE_LABELS: Record<string, string> = {

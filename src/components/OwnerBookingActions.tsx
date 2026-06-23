@@ -1,6 +1,9 @@
 "use client";
 
 import { setBookingStatus } from "@/lib/actions/bookings";
+import { BOOKING_STATUS_LABELS, BOOKING_STATUS_COLORS } from "@/lib/format";
+
+const STATUSES = ["INTERESTED", "VIEWING", "RESERVED", "CANCELLED"] as const;
 
 export function OwnerBookingActions({
   bookingId,
@@ -9,22 +12,22 @@ export function OwnerBookingActions({
   bookingId: string;
   status: string;
 }) {
-  if (status !== "PENDING") {
-    return <span className="text-foreground/40">-</span>;
-  }
+  const action = setBookingStatus.bind(null, bookingId);
 
   return (
-    <div className="flex justify-end gap-2">
-      <form action={setBookingStatus.bind(null, bookingId, "APPROVED")}>
-        <button type="submit" className="font-medium text-primary-700 hover:underline">
-          อนุมัติ
-        </button>
-      </form>
-      <form action={setBookingStatus.bind(null, bookingId, "REJECTED")}>
-        <button type="submit" className="font-medium text-red-600 hover:underline">
-          ปฏิเสธ
-        </button>
-      </form>
-    </div>
+    <form action={action}>
+      <select
+        name="status"
+        defaultValue={status}
+        onChange={(e) => e.target.form?.requestSubmit()}
+        className={`rounded-full border-0 px-3 py-1 text-xs font-semibold ${BOOKING_STATUS_COLORS[status] ?? "bg-zinc-100 text-zinc-700"}`}
+      >
+        {STATUSES.map((s) => (
+          <option key={s} value={s}>
+            {BOOKING_STATUS_LABELS[s]}
+          </option>
+        ))}
+      </select>
+    </form>
   );
 }
