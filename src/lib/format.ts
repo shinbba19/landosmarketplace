@@ -49,7 +49,7 @@ export const BOOKING_STATUS_LABELS: Record<string, string> = {
   PENDING: "⚪ รอดำเนินการ",
   INTERESTED: "🟡 สนใจ",
   VIEWING: "🟠 นัดชม",
-  RESERVED: "🟢 จองแล้ว",
+  RESERVED: "🟢 ขายแล้ว",
   CANCELLED: "🔴 ยกเลิก",
 };
 
