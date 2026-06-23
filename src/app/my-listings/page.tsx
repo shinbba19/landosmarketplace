@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { ROLE_USER_EMAIL } from "@/lib/roles";
+import { deleteListing } from "@/lib/actions/listings";
+import { DeleteListingButton } from "@/components/DeleteListingButton";
 import {
   formatCurrency,
   formatNumber,
@@ -114,6 +116,7 @@ export default async function MyListingsPage() {
                 >
                   ขอคำปรึกษาผู้เชี่ยวชาญ
                 </Link>
+                <DeleteListingButton action={deleteListing.bind(null, listing.id)} />
               </div>
             </div>
           ))}

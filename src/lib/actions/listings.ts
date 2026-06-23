@@ -276,3 +276,11 @@ export async function publishListing(listingId: string) {
 
   redirect(`/listings/${listingId}`);
 }
+
+export async function deleteListing(listingId: string) {
+  await prisma.listing.delete({ where: { id: listingId } });
+
+  revalidatePath("/");
+  revalidatePath("/my-listings");
+  revalidatePath("/admin");
+}
