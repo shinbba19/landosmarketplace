@@ -15,6 +15,7 @@ import {
   USER_ROLE_LABELS,
 } from "@/lib/format";
 import { updatePlot, deletePlot } from "@/lib/actions/plots";
+import { deleteListing } from "@/lib/actions/listings";
 import { setBookingStatus } from "@/lib/actions/bookings";
 import { updateServiceRequestStatus } from "@/lib/actions/service-requests";
 
@@ -196,12 +197,24 @@ function ListingsTab({ listings }: { listings: AdminListing[] }) {
               </td>
               <td className="px-4 py-3 text-foreground/70">{listing.ownerName}</td>
               <td className="px-4 py-3 text-right">
-                <Link
-                  href={`/listings/${listing.id}`}
-                  className="font-medium text-primary-700 hover:underline"
-                >
-                  ดู
-                </Link>
+                <div className="flex justify-end gap-2">
+                  <Link
+                    href={`/listings/${listing.id}`}
+                    className="font-medium text-primary-700 hover:underline"
+                  >
+                    ดู
+                  </Link>
+                  <form
+                    action={deleteListing.bind(null, listing.id)}
+                    onSubmit={(e) => {
+                      if (!confirm("ต้องการลบประกาศนี้ใช่ไหม?")) e.preventDefault();
+                    }}
+                  >
+                    <button type="submit" className="font-medium text-red-600 hover:underline">
+                      ลบ
+                    </button>
+                  </form>
+                </div>
               </td>
             </tr>
           ))}
