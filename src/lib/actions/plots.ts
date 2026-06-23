@@ -27,3 +27,16 @@ export async function updatePlot(plotId: string, formData: FormData) {
   revalidatePath(`/listings/${plot.project.listingId}`);
   revalidatePath(`/listings/${plot.project.listingId}/subdivision`);
 }
+
+export async function deletePlot(plotId: string) {
+  const plot = await prisma.plot.findUniqueOrThrow({
+    where: { id: plotId },
+    include: { project: true },
+  });
+
+  await prisma.plot.delete({ where: { id: plotId } });
+
+  revalidatePath("/admin");
+  revalidatePath(`/listings/${plot.project.listingId}`);
+  revalidatePath(`/listings/${plot.project.listingId}/subdivision`);
+}

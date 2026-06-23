@@ -41,7 +41,31 @@ function parseImageFiles(formData: FormData): File[] {
     .filter((entry): entry is File => entry instanceof File && entry.size > 0);
 }
 
-async function ensureSubdivisionProject(listingId: string, wholeLandPrice: number) {
+interface PlotFormInput {
+  label: string;
+  area: number;
+  price: number;
+}
+
+function parsePlotInputs(formData: FormData): PlotFormInput[] {
+  const count = Number(formData.get("plotCount") ?? 0);
+  if (count <= 0) return [];
+  const plots: PlotFormInput[] = [];
+  for (let i = 0; i < count; i++) {
+    plots.push({
+      label: String(formData.get(`plot_label_${i}`) ?? `P${i + 1}`),
+      area: Number(formData.get(`plot_area_${i}`) ?? 100),
+      price: Number(formData.get(`plot_price_${i}`) ?? 0),
+    });
+  }
+  return plots;
+}
+
+async function ensureSubdivisionProject(
+  listingId: string,
+  wholeLandPrice: number,
+  plotInputs?: PlotFormInput[],
+) {
   const existing = await prisma.subdivisionProject.findUnique({
     where: { listingId },
   });
@@ -56,20 +80,25 @@ async function ensureSubdivisionProject(listingId: string, wholeLandPrice: numbe
     },
   });
 
-  const defaultPlotPrice = Math.round((wholeLandPrice || 8_000_000) / PLOT_LABELS.length);
+  const plotsToCreate = plotInputs && plotInputs.length > 0 ? plotInputs : PLOT_LABELS.map((label) => ({
+    label,
+    area: 100,
+    price: Math.round((wholeLandPrice || 8_000_000) / PLOT_LABELS.length),
+  }));
 
-  for (const label of PLOT_LABELS) {
+  for (const p of plotsToCreate) {
+    const side = Math.round(Math.sqrt(p.area));
     await prisma.plot.create({
       data: {
         projectId: project.id,
-        label,
-        area: 100,
-        width: 10,
-        depth: 20,
-        price: defaultPlotPrice,
+        label: p.label,
+        area: p.area,
+        width: side,
+        depth: p.area > 0 ? Math.round(p.area / side) : side,
+        price: p.price,
         status: "AVAILABLE",
-        points: PLOT_POINTS[label],
-        perspectiveImages: defaultPerspectiveImages(`${listingId}-${label.toLowerCase()}`),
+        points: PLOT_POINTS[p.label] ?? "0,0 25,0 25,25 0,25",
+        perspectiveImages: defaultPerspectiveImages(`${listingId}-${p.label.toLowerCase()}`),
       },
     });
   }
@@ -81,6 +110,7 @@ export async function createListing(formData: FormData) {
   const fields = parseListingFields(formData);
   const images = parseImageUrls(formData);
   const imageFiles = parseImageFiles(formData);
+  const plotInputs = parsePlotInputs(formData);
   const intent = String(formData.get("intent") ?? "draft");
 
   const owner = await prisma.user.findUniqueOrThrow({
@@ -112,7 +142,7 @@ export async function createListing(formData: FormData) {
   });
 
   if (fields.saleMode !== "WHOLE") {
-    await ensureSubdivisionProject(listing.id, fields.wholeLandPrice);
+    await ensureSubdivisionProject(listing.id, fields.wholeLandPrice, plotInputs);
   }
 
   revalidatePath("/");
@@ -131,6 +161,7 @@ export async function updateListing(listingId: string, formData: FormData) {
   const fields = parseListingFields(formData);
   const images = parseImageUrls(formData);
   const imageFiles = parseImageFiles(formData);
+  const plotInputs = parsePlotInputs(formData);
   const intent = String(formData.get("intent") ?? "draft");
 
   const current = await prisma.listing.findUniqueOrThrow({ where: { id: listingId } });
@@ -154,7 +185,7 @@ export async function updateListing(listingId: string, formData: FormData) {
   }
 
   if (fields.saleMode !== "WHOLE") {
-    await ensureSubdivisionProject(listingId, fields.wholeLandPrice);
+    await ensureSubdivisionProject(listingId, fields.wholeLandPrice, plotInputs);
   }
 
   revalidatePath("/");

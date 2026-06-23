@@ -14,7 +14,7 @@ import {
   SERVICE_REQUEST_STATUS_LABELS,
   USER_ROLE_LABELS,
 } from "@/lib/format";
-import { updatePlot } from "@/lib/actions/plots";
+import { updatePlot, deletePlot } from "@/lib/actions/plots";
 import { setBookingStatus } from "@/lib/actions/bookings";
 import { updateServiceRequestStatus } from "@/lib/actions/service-requests";
 
@@ -292,13 +292,25 @@ function PlotRow({ plot }: { plot: AdminPlot }) {
         </select>
       </td>
       <td className="px-4 py-3 text-right">
-        <button
-          type="submit"
-          form={`plot-${plot.id}`}
-          className="font-medium text-primary-700 hover:underline"
-        >
-          บันทึก
-        </button>
+        <div className="flex justify-end gap-2">
+          <button
+            type="submit"
+            form={`plot-${plot.id}`}
+            className="font-medium text-primary-700 hover:underline"
+          >
+            บันทึก
+          </button>
+          <form
+            action={deletePlot.bind(null, plot.id)}
+            onSubmit={(e) => {
+              if (!confirm("ต้องการลบแปลงนี้ใช่ไหม?")) e.preventDefault();
+            }}
+          >
+            <button type="submit" className="font-medium text-red-600 hover:underline">
+              ลบ
+            </button>
+          </form>
+        </div>
       </td>
     </tr>
   );

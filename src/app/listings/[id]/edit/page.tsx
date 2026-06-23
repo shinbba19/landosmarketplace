@@ -12,7 +12,10 @@ export default async function EditListingPage({
 
   const listing = await prisma.listing.findUnique({
     where: { id },
-    include: { images: { orderBy: { order: "asc" } } },
+    include: {
+      images: { orderBy: { order: "asc" } },
+      subdivision: { include: { plots: { orderBy: { label: "asc" } } } },
+    },
   });
 
   if (!listing) notFound();
@@ -37,6 +40,11 @@ export default async function EditListingPage({
           description: listing.description,
           saleMode: listing.saleMode,
           images: listing.images.map((img) => img.url),
+          plots: listing.subdivision?.plots.map((p) => ({
+            label: p.label,
+            area: p.area,
+            price: p.price,
+          })),
         }}
         submitLabels={{ publish: listing.status === "PUBLISHED" ? "บันทึกการเปลี่ยนแปลง" : "เผยแพร่ประกาศ" }}
       />
