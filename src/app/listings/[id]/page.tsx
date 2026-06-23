@@ -18,6 +18,7 @@ export default async function ListingDetailPage({
       images: { orderBy: { order: "asc" } },
       owner: true,
       subdivision: { include: { plots: true } },
+      bookings: { where: { plotId: null, status: { not: "CANCELLED" } }, take: 1 },
     },
   });
 
@@ -84,6 +85,7 @@ export default async function ListingDetailPage({
             ownerName={listing.owner.name}
             plots={plots}
             boundary={listing.subdivision?.boundaryPoints}
+            hasActiveBooking={listing.bookings.length > 0}
           />
         </div>
       </div>

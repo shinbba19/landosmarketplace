@@ -34,6 +34,7 @@ export function PropertyTabs({
   ownerName: string;
   plots: PropertyTabsPlot[];
   boundary?: string | null;
+  hasActiveBooking?: boolean;
 }) {
   const showWhole = saleMode === "WHOLE" || saleMode === "BOTH";
   const showSubdivision = saleMode === "SUBDIVISION" || saleMode === "BOTH";
@@ -97,11 +98,17 @@ export function PropertyTabs({
             </div>
             <div className="rounded-xl border border-primary-100 p-4">
               <p className="mb-3 text-sm text-foreground/70">ติดต่อ: {ownerName}</p>
-              <BookingForm
-                action={createListingBooking.bind(null, listingId)}
-                submitLabel="จองที่ดินแปลงนี้"
-                successMessage="ส่งคำขอจองที่ดินเรียบร้อยแล้ว เจ้าของที่ดินและผู้ดูแลระบบจะได้รับการแจ้งเตือน"
-              />
+              {hasActiveBooking ? (
+                <div className="rounded-xl bg-zinc-50 p-4 text-sm text-foreground/60">
+                  ที่ดินแปลงนี้มีผู้จองแล้ว ไม่สามารถจองเพิ่มได้
+                </div>
+              ) : (
+                <BookingForm
+                  action={createListingBooking.bind(null, listingId)}
+                  submitLabel="จองที่ดินแปลงนี้"
+                  successMessage="ส่งคำขอจองที่ดินเรียบร้อยแล้ว เจ้าของที่ดินและผู้ดูแลระบบจะได้รับการแจ้งเตือน"
+                />
+              )}
             </div>
           </div>
         )}
