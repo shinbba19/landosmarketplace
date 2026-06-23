@@ -34,6 +34,7 @@ enum PlotStatus {
 }
 
 enum BookingStatus {
+  PENDING
   INTERESTED
   VIEWING
   RESERVED
@@ -146,7 +147,7 @@ model Booking {
   phone   String
   email   String
   message String?
-  status  BookingStatus @default(INTERESTED)
+  status  BookingStatus @default(PENDING)
 
   createdAt DateTime @default(now())
 }

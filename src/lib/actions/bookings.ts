@@ -9,7 +9,7 @@ function bookingFields(formData: FormData) {
     phone: String(formData.get("phone") ?? "").trim(),
     email: String(formData.get("email") ?? "").trim(),
     message: String(formData.get("message") ?? "").trim() || null,
-    status: "INTERESTED" as const,
+    status: "PENDING" as const,
   };
 }
 
@@ -43,7 +43,7 @@ export async function createListingBooking(listingId: string, formData: FormData
   revalidatePath("/my-listings/bookings");
 }
 
-const BOOKING_STATUSES = ["INTERESTED", "VIEWING", "RESERVED", "CANCELLED"] as const;
+const BOOKING_STATUSES = ["PENDING", "INTERESTED", "VIEWING", "RESERVED", "CANCELLED"] as const;
 type BookingStatus = (typeof BOOKING_STATUSES)[number];
 
 export async function setBookingStatus(bookingId: string, formData: FormData) {

@@ -3,7 +3,7 @@
 import { setBookingStatus } from "@/lib/actions/bookings";
 import { BOOKING_STATUS_LABELS, BOOKING_STATUS_COLORS } from "@/lib/format";
 
-const STATUSES = ["INTERESTED", "VIEWING", "RESERVED", "CANCELLED"] as const;
+const STATUSES = ["PENDING", "INTERESTED", "VIEWING", "RESERVED", "CANCELLED"] as const;
 
 export function OwnerBookingActions({
   bookingId,

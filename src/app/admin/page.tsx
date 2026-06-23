@@ -29,7 +29,7 @@ export default async function AdminPage() {
     availablePlots: plots.filter((p) => p.status === "AVAILABLE").length,
     reservedPlots: plots.filter((p) => p.status === "RESERVED").length,
     soldPlots: plots.filter((p) => p.status === "SOLD").length,
-    pendingBookings: bookings.filter((b) => b.status === "INTERESTED" || b.status === "VIEWING").length,
+    pendingBookings: bookings.filter((b) => b.status === "PENDING" || b.status === "INTERESTED" || b.status === "VIEWING").length,
     openServiceRequests: serviceRequests.filter((r) => r.status !== "COMPLETED").length,
     totalUsers: users.length,
   };

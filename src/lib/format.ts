@@ -46,6 +46,7 @@ export const PLOT_STATUS_COLORS: Record<string, { fill: string; text: string; ba
 };
 
 export const BOOKING_STATUS_LABELS: Record<string, string> = {
+  PENDING: "⚪ รอดำเนินการ",
   INTERESTED: "🟡 สนใจ",
   VIEWING: "🟠 นัดชม",
   RESERVED: "🟢 จองแล้ว",
@@ -53,6 +54,7 @@ export const BOOKING_STATUS_LABELS: Record<string, string> = {
 };
 
 export const BOOKING_STATUS_COLORS: Record<string, string> = {
+  PENDING: "bg-zinc-100 text-zinc-700",
   INTERESTED: "bg-yellow-100 text-yellow-700",
   VIEWING: "bg-orange-100 text-orange-700",
   RESERVED: "bg-primary-100 text-primary-700",

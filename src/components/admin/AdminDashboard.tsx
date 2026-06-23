@@ -378,7 +378,7 @@ function BookingsTab({ bookings }: { bookings: AdminBooking[] }) {
                       BOOKING_STATUS_COLORS[booking.status] ?? "bg-zinc-100 text-zinc-700"
                     }`}
                   >
-                    {(["INTERESTED", "VIEWING", "RESERVED", "CANCELLED"] as const).map((s) => (
+                    {(["PENDING", "INTERESTED", "VIEWING", "RESERVED", "CANCELLED"] as const).map((s) => (
                       <option key={s} value={s}>{BOOKING_STATUS_LABELS[s]}</option>
                     ))}
                   </select>
