@@ -46,10 +46,8 @@ export async function createListingBooking(listingId: string, formData: FormData
 const BOOKING_STATUSES = ["INTERESTED", "VIEWING", "RESERVED", "CANCELLED"] as const;
 type BookingStatus = (typeof BOOKING_STATUSES)[number];
 
-export async function setBookingStatus(bookingId: string, statusOrFormData: BookingStatus | FormData) {
-  const status = (statusOrFormData instanceof FormData
-    ? String(statusOrFormData.get("status"))
-    : statusOrFormData) as BookingStatus;
+export async function setBookingStatus(bookingId: string, formData: FormData) {
+  const status = String(formData.get("status")) as BookingStatus;
   if (!BOOKING_STATUSES.includes(status)) return;
   const booking = await prisma.booking.findUniqueOrThrow({
     where: { id: bookingId },
