@@ -58,7 +58,8 @@ export async function setBookingStatus(bookingId: string, formData: FormData) {
 
   if (booking.plotId && booking.plot) {
     const plotStatus =
-      status === "RESERVED" ? "RESERVED" as const :
+      status === "RESERVED" ? "SOLD" as const :
+      status === "VIEWING" ? "RESERVED" as const :
       status === "CANCELLED" ? "AVAILABLE" as const :
       undefined;
     if (plotStatus) {
