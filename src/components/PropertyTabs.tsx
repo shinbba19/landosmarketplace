@@ -26,6 +26,7 @@ export function PropertyTabs({
   ownerName,
   plots,
   boundary,
+  hasActiveBooking,
 }: {
   listingId: string;
   saleMode: string;
