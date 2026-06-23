@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { ServiceRequestForm } from "@/components/ServiceRequestForm";
 import { createServiceRequest } from "@/lib/actions/service-requests";
@@ -29,7 +30,13 @@ export default async function ServiceRequestPage({
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground sm:text-3xl">ขอคำปรึกษาผู้เชี่ยวชาญ</h1>
+        <Link
+          href={`/listings/${listing.id}`}
+          className="text-sm font-medium text-primary-700 hover:underline"
+        >
+          ← กลับไปหน้ารายละเอียดที่ดิน
+        </Link>
+        <h1 className="mt-2 text-2xl font-bold text-foreground sm:text-3xl">ขอคำปรึกษาผู้เชี่ยวชาญ</h1>
         <p className="mt-1 text-foreground/60">{listing.title}</p>
         <p className="mt-2 text-sm text-foreground/60">
           ทีมผู้เชี่ยวชาญของ LAND OS พร้อมให้คำปรึกษาด้านการศึกษาความเป็นไปได้ การวางแผนแบ่งแปลง
