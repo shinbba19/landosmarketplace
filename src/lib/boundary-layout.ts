@@ -46,10 +46,11 @@ function rectCornersInside(x: number, y: number, w: number, h: number, polygon: 
 }
 
 const ROAD_GAP = 1.5;
-const PADDING = 1;
+const PADDING = 2;
 
 /**
  * Generate plot rectangles that fit inside a boundary polygon.
+ * Tries increasingly dense grids until enough cells fit inside the polygon.
  * Returns SVG points strings for each plot, in the same 100x100 coordinate space.
  */
 export function generatePlotsInBoundary(
@@ -67,45 +68,59 @@ export function generatePlotsInBoundary(
 
   if (innerW <= 0 || innerH <= 0) return [];
 
-  const aspect = innerW / innerH;
+  // Try different grid sizes, pick the one that yields enough inside-boundary cells
+  // with the largest cell area
+  let bestResult: string[] = [];
+  let bestCellArea = 0;
 
-  // Pick grid that best matches the boundary aspect ratio
-  let bestCols = 1;
-  let bestRows = numPlots;
-  let bestScore = -1;
+  for (let cols = 1; cols <= numPlots * 2; cols++) {
+    for (let rows = 1; rows <= numPlots * 2; rows++) {
+      if (cols * rows < numPlots) continue;
+      if (cols * rows > numPlots * 4) continue;
 
-  for (let cols = 1; cols <= numPlots; cols++) {
+      const cellW = (innerW - ROAD_GAP * (cols - 1)) / cols;
+      const cellH = (innerH - ROAD_GAP * (rows - 1)) / rows;
+      if (cellW < 2 || cellH < 2) continue;
+
+      const candidates: string[] = [];
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const x = innerX + col * (cellW + ROAD_GAP);
+          const y = innerY + row * (cellH + ROAD_GAP);
+          if (rectCornersInside(x, y, cellW, cellH, boundary)) {
+            const r = (v: number) => Math.round(v * 100) / 100;
+            candidates.push(
+              `${r(x)},${r(y)} ${r(x + cellW)},${r(y)} ${r(x + cellW)},${r(y + cellH)} ${r(x)},${r(y + cellH)}`,
+            );
+          }
+        }
+      }
+
+      if (candidates.length >= numPlots && cellW * cellH > bestCellArea) {
+        bestCellArea = cellW * cellH;
+        bestResult = candidates.slice(0, numPlots);
+      }
+    }
+  }
+
+  // Fallback: if no grid fit perfectly, use bounding box without polygon check
+  if (bestResult.length === 0) {
+    const cols = Math.ceil(Math.sqrt(numPlots * (innerW / innerH)));
     const rows = Math.ceil(numPlots / cols);
     const cellW = (innerW - ROAD_GAP * (cols - 1)) / cols;
     const cellH = (innerH - ROAD_GAP * (rows - 1)) / rows;
-    if (cellW <= 0 || cellH <= 0) continue;
-    // Prefer squarish cells that also match the bounding box shape
-    const gridAspect = (cols * (cellW + ROAD_GAP)) / (rows * (cellH + ROAD_GAP));
-    const aspectFit = 1 / (1 + Math.abs(Math.log(gridAspect / aspect)));
-    const cellSquareness = 1 / (1 + Math.abs(Math.log(cellW / cellH)));
-    const score = aspectFit * 2 + cellSquareness + cellW * cellH * 0.001;
-    if (score > bestScore) {
-      bestScore = score;
-      bestCols = cols;
-      bestRows = rows;
+
+    for (let row = 0; row < rows && bestResult.length < numPlots; row++) {
+      for (let col = 0; col < cols && bestResult.length < numPlots; col++) {
+        const x = innerX + col * (cellW + ROAD_GAP);
+        const y = innerY + row * (cellH + ROAD_GAP);
+        const r = (v: number) => Math.round(v * 100) / 100;
+        bestResult.push(
+          `${r(x)},${r(y)} ${r(x + cellW)},${r(y)} ${r(x + cellW)},${r(y + cellH)} ${r(x)},${r(y + cellH)}`,
+        );
+      }
     }
   }
 
-  const cellW = (innerW - ROAD_GAP * (bestCols - 1)) / bestCols;
-  const cellH = (innerH - ROAD_GAP * (bestRows - 1)) / bestRows;
-
-  const results: string[] = [];
-  for (let row = 0; row < bestRows && results.length < numPlots; row++) {
-    for (let col = 0; col < bestCols && results.length < numPlots; col++) {
-      const x = innerX + col * (cellW + ROAD_GAP);
-      const y = innerY + row * (cellH + ROAD_GAP);
-
-      const r = (v: number) => Math.round(v * 100) / 100;
-      results.push(
-        `${r(x)},${r(y)} ${r(x + cellW)},${r(y)} ${r(x + cellW)},${r(y + cellH)} ${r(x)},${r(y + cellH)}`,
-      );
-    }
-  }
-
-  return results;
+  return bestResult;
 }
