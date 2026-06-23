@@ -62,7 +62,7 @@ export function calculateFeasibility(
   const roadCost = 0;
   const infrastructureCost = wholeLandPrice * INFRASTRUCTURE_COST_RATIO;
   const marketingCost = wholeLandPrice * ADMIN_COST_RATIO;
-  const developmentCost = roadCost + infrastructureCost + marketingCost;
+  const developmentCost = wholeLandPrice + roadCost + infrastructureCost + marketingCost;
 
   const wholeLandRevenue = wholeLandSalePrice > 0 ? wholeLandSalePrice : wholeLandPrice;
   const subdivisionRevenue = numberOfPlots * avgPlotPrice;
