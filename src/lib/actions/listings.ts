@@ -45,6 +45,7 @@ interface PlotFormInput {
   label: string;
   area: number;
   price: number;
+  imageFiles: File[];
 }
 
 function parsePlotInputs(formData: FormData): PlotFormInput[] {
@@ -52,10 +53,14 @@ function parsePlotInputs(formData: FormData): PlotFormInput[] {
   if (count <= 0) return [];
   const plots: PlotFormInput[] = [];
   for (let i = 0; i < count; i++) {
+    const imageFiles = formData
+      .getAll(`plot_images_${i}`)
+      .filter((entry): entry is File => entry instanceof File && entry.size > 0);
     plots.push({
       label: String(formData.get(`plot_label_${i}`) ?? `P${i + 1}`),
       area: Number(formData.get(`plot_area_${i}`) ?? 100),
       price: Number(formData.get(`plot_price_${i}`) ?? 0),
+      imageFiles,
     });
   }
   return plots;
@@ -84,9 +89,24 @@ async function ensureSubdivisionProject(
     label,
     area: 100,
     price: Math.round((wholeLandPrice || 8_000_000) / PLOT_LABELS.length),
+    imageFiles: [] as File[],
   }));
 
   for (const p of plotsToCreate) {
+    let perspectiveImages: string;
+
+    if (p.imageFiles.length > 0) {
+      const urls = await uploadListingImages(
+        p.imageFiles,
+        `listings/${listingId}/plots/${p.label.toLowerCase()}`,
+      );
+      perspectiveImages = JSON.stringify(
+        urls.map((url, idx) => ({ label: `ภาพที่ ${idx + 1}`, url })),
+      );
+    } else {
+      perspectiveImages = defaultPerspectiveImages(`${listingId}-${p.label.toLowerCase()}`);
+    }
+
     const side = Math.round(Math.sqrt(p.area));
     await prisma.plot.create({
       data: {
@@ -98,7 +118,7 @@ async function ensureSubdivisionProject(
         price: p.price,
         status: "AVAILABLE",
         points: PLOT_POINTS[p.label] ?? "0,0 25,0 25,25 0,25",
-        perspectiveImages: defaultPerspectiveImages(`${listingId}-${p.label.toLowerCase()}`),
+        perspectiveImages,
       },
     });
   }

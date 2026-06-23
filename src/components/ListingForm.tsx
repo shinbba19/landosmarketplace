@@ -199,74 +199,75 @@ export function ListingForm({
           <h2 className="text-lg font-bold text-foreground">ข้อมูลแปลงย่อย</h2>
 
           <input type="hidden" name="plotCount" value={plots.length} />
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="border-b border-primary-100 text-xs text-foreground/50">
-                <tr>
-                  <th className="px-3 py-2">แปลง</th>
-                  <th className="px-3 py-2">เนื้อที่ (ตร.ว.)</th>
-                  <th className="px-3 py-2">ราคา (บาท)</th>
-                  <th className="px-3 py-2"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {plots.map((plot, i) => (
-                  <tr key={i} className="border-b border-primary-50 last:border-0">
-                    <td className="px-3 py-2">
-                      <input
-                        name={`plot_label_${i}`}
-                        value={plot.label}
-                        onChange={(e) => {
-                          const next = [...plots];
-                          next[i] = { ...next[i], label: e.target.value };
-                          setPlots(next);
-                        }}
-                        className="w-20 rounded-lg border border-primary-200 px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400"
-                      />
-                    </td>
-                    <td className="px-3 py-2">
-                      <input
-                        type="number"
-                        step="0.01"
-                        name={`plot_area_${i}`}
-                        value={plot.area}
-                        onChange={(e) => {
-                          const next = [...plots];
-                          next[i] = { ...next[i], area: Number(e.target.value) };
-                          setPlots(next);
-                        }}
-                        className="w-28 rounded-lg border border-primary-200 px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400"
-                      />
-                    </td>
-                    <td className="px-3 py-2">
-                      <input
-                        type="number"
-                        step="1"
-                        name={`plot_price_${i}`}
-                        value={plot.price}
-                        onChange={(e) => {
-                          const next = [...plots];
-                          next[i] = { ...next[i], price: Number(e.target.value) };
-                          setPlots(next);
-                        }}
-                        className="w-32 rounded-lg border border-primary-200 px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400"
-                      />
-                    </td>
-                    <td className="px-3 py-2 text-right">
-                      {plots.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => setPlots(plots.filter((_, j) => j !== i))}
-                          className="text-sm font-medium text-red-600 hover:underline"
-                        >
-                          ลบ
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="flex flex-col gap-3">
+            {plots.map((plot, i) => (
+              <div key={i} className="rounded-xl border border-primary-100 bg-zinc-50 p-4">
+                <div className="flex flex-wrap items-end gap-3">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs text-foreground/50">แปลง</label>
+                    <input
+                      name={`plot_label_${i}`}
+                      value={plot.label}
+                      onChange={(e) => {
+                        const next = [...plots];
+                        next[i] = { ...next[i], label: e.target.value };
+                        setPlots(next);
+                      }}
+                      className="w-20 rounded-lg border border-primary-200 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs text-foreground/50">เนื้อที่ (ตร.ว.)</label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      name={`plot_area_${i}`}
+                      value={plot.area}
+                      onChange={(e) => {
+                        const next = [...plots];
+                        next[i] = { ...next[i], area: Number(e.target.value) };
+                        setPlots(next);
+                      }}
+                      className="w-28 rounded-lg border border-primary-200 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs text-foreground/50">ราคา (บาท)</label>
+                    <input
+                      type="number"
+                      step="1"
+                      name={`plot_price_${i}`}
+                      value={plot.price}
+                      onChange={(e) => {
+                        const next = [...plots];
+                        next[i] = { ...next[i], price: Number(e.target.value) };
+                        setPlots(next);
+                      }}
+                      className="w-32 rounded-lg border border-primary-200 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400"
+                    />
+                  </div>
+                  {plots.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => setPlots(plots.filter((_, j) => j !== i))}
+                      className="ml-auto text-sm font-medium text-red-600 hover:underline"
+                    >
+                      ลบ
+                    </button>
+                  )}
+                </div>
+                <div className="mt-3 flex flex-col gap-1">
+                  <label className="text-xs text-foreground/50">รูปภาพแปลง (เลือกได้หลายไฟล์)</label>
+                  <input
+                    type="file"
+                    name={`plot_images_${i}`}
+                    multiple
+                    accept="image/*"
+                    className="text-sm file:mr-3 file:rounded-full file:border-0 file:bg-primary-100 file:px-3 file:py-1 file:text-xs file:text-primary-700"
+                  />
+                </div>
+              </div>
+            ))}
           </div>
 
           <button
