@@ -29,6 +29,14 @@ export interface ListingFormValues {
   plots?: PlotInput[];
 }
 
+function splitLandArea(totalRai: number) {
+  const rai = Math.floor(totalRai);
+  const remainNgan = (totalRai - rai) * 4;
+  const ngan = Math.floor(remainNgan);
+  const wah = Math.round((remainNgan - ngan) * 100 * 100) / 100;
+  return { rai, ngan, wah };
+}
+
 export function ListingForm({
   action,
   initialValues,
@@ -38,6 +46,12 @@ export function ListingForm({
   initialValues?: ListingFormValues;
   submitLabels?: { draft?: string; feasibility?: string; publish?: string };
 }) {
+  const initial = splitLandArea(initialValues?.landArea ?? 0);
+  const [rai, setRai] = useState(initial.rai);
+  const [ngan, setNgan] = useState(initial.ngan);
+  const [wah, setWah] = useState(initial.wah);
+  const landArea = rai + ngan / 4 + wah / 400;
+
   const [saleMode, setSaleMode] = useState(initialValues?.saleMode ?? "WHOLE");
   const defaultPlots = initialValues?.plots ?? [
     { label: "P1", area: 100, price: 0 },
@@ -92,16 +106,40 @@ export function ListingForm({
           />
         </div>
 
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-foreground/70">ขนาดที่ดิน (ไร่)</label>
-          <input
-            type="number"
-            step="0.01"
-            name="landArea"
-            required
-            defaultValue={initialValues?.landArea}
-            className="rounded-lg border border-primary-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400"
-          />
+        <div className="sm:col-span-2 flex flex-col gap-1">
+          <label className="text-sm font-medium text-foreground/70">ขนาดที่ดิน</label>
+          <input type="hidden" name="landArea" value={landArea} />
+          <div className="flex items-center gap-2">
+            <input
+              type="number"
+              min="0"
+              step="1"
+              value={rai}
+              onChange={(e) => setRai(Number(e.target.value) || 0)}
+              className="w-24 rounded-lg border border-primary-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400"
+            />
+            <span className="text-sm text-foreground/60">ไร่</span>
+            <input
+              type="number"
+              min="0"
+              max="3"
+              step="1"
+              value={ngan}
+              onChange={(e) => setNgan(Number(e.target.value) || 0)}
+              className="w-20 rounded-lg border border-primary-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400"
+            />
+            <span className="text-sm text-foreground/60">งาน</span>
+            <input
+              type="number"
+              min="0"
+              max="99"
+              step="0.01"
+              value={wah}
+              onChange={(e) => setWah(Number(e.target.value) || 0)}
+              className="w-24 rounded-lg border border-primary-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400"
+            />
+            <span className="text-sm text-foreground/60">ตร.ว.</span>
+          </div>
         </div>
 
         <div className="flex flex-col gap-1">
