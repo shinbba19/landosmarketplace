@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { ROLE_USER_EMAIL } from "@/lib/roles";
 import { PLOT_LABELS, PLOT_POINTS, defaultPerspectiveImages } from "@/lib/subdivision";
 import { uploadListingImages } from "@/lib/actions/uploads";
+import { generatePlotsInBoundary } from "@/lib/boundary-layout";
 
 const SALE_MODES = ["WHOLE", "SUBDIVISION", "BOTH"] as const;
 type SaleMode = (typeof SALE_MODES)[number];
@@ -124,7 +125,13 @@ async function ensureSubdivisionProject(
     imageFiles: [] as File[],
   }));
 
-  for (const p of plotsToCreate) {
+  // Generate plot coordinates inside boundary if available
+  const generatedPoints = boundary?.boundaryPoints
+    ? generatePlotsInBoundary(boundary.boundaryPoints, plotsToCreate.length)
+    : [];
+
+  for (let idx = 0; idx < plotsToCreate.length; idx++) {
+    const p = plotsToCreate[idx];
     let perspectiveImages: string;
 
     if (p.imageFiles.length > 0) {
@@ -133,12 +140,13 @@ async function ensureSubdivisionProject(
         `listings/${listingId}/plots/${p.label.toLowerCase()}`,
       );
       perspectiveImages = JSON.stringify(
-        urls.map((url, idx) => ({ label: `ภาพที่ ${idx + 1}`, url })),
+        urls.map((url, i) => ({ label: `ภาพที่ ${i + 1}`, url })),
       );
     } else {
       perspectiveImages = defaultPerspectiveImages(`${listingId}-${p.label.toLowerCase()}`);
     }
 
+    const points = generatedPoints[idx] ?? PLOT_POINTS[p.label] ?? "0,0 25,0 25,25 0,25";
     const side = Math.round(Math.sqrt(p.area));
     await prisma.plot.create({
       data: {
@@ -149,7 +157,7 @@ async function ensureSubdivisionProject(
         depth: p.area > 0 ? Math.round(p.area / side) : side,
         price: p.price,
         status: "AVAILABLE",
-        points: PLOT_POINTS[p.label] ?? "0,0 25,0 25,25 0,25",
+        points,
         perspectiveImages,
       },
     });
