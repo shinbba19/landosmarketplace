@@ -49,6 +49,17 @@ type BookingStatus = (typeof BOOKING_STATUSES)[number];
 export async function setBookingStatus(bookingId: string, formData: FormData) {
   const status = String(formData.get("status")) as BookingStatus;
   if (!BOOKING_STATUSES.includes(status)) return;
+  await setBookingStatusInternal(bookingId, status);
+}
+
+export async function updateBookingFromForm(formData: FormData) {
+  const bookingId = String(formData.get("bookingId"));
+  const status = String(formData.get("status")) as BookingStatus;
+  if (!bookingId || !BOOKING_STATUSES.includes(status)) return;
+  await setBookingStatusInternal(bookingId, status);
+}
+
+async function setBookingStatusInternal(bookingId: string, status: BookingStatus) {
   const booking = await prisma.booking.findUniqueOrThrow({
     where: { id: bookingId },
     include: { plot: { include: { project: true } } },

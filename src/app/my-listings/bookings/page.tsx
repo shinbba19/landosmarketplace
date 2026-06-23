@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { ROLE_USER_EMAIL } from "@/lib/roles";
+import { updateBookingFromForm } from "@/lib/actions/bookings";
 import { OwnerBookingActions } from "@/components/OwnerBookingActions";
 
 export default async function OwnerBookingsPage() {
@@ -86,7 +87,7 @@ export default async function OwnerBookingsPage() {
                     </td>
                     <td className="px-4 py-3 text-foreground/70">{booking.message ?? "-"}</td>
                     <td className="px-4 py-3">
-                      <OwnerBookingActions bookingId={booking.id} status={booking.status} />
+                      <OwnerBookingActions bookingId={booking.id} status={booking.status} action={updateBookingFromForm} />
                     </td>
                   </tr>
                 );

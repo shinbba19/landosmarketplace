@@ -1,6 +1,6 @@
 "use client";
 
-import { setBookingStatus } from "@/lib/actions/bookings";
+import { useRef } from "react";
 import { BOOKING_STATUS_LABELS, BOOKING_STATUS_COLORS } from "@/lib/format";
 
 const STATUSES = ["PENDING", "INTERESTED", "VIEWING", "RESERVED", "CANCELLED"] as const;
@@ -8,19 +8,22 @@ const STATUSES = ["PENDING", "INTERESTED", "VIEWING", "RESERVED", "CANCELLED"] a
 export function OwnerBookingActions({
   bookingId,
   status,
+  action,
 }: {
   bookingId: string;
   status: string;
+  action: (formData: FormData) => void;
 }) {
-  const action = setBookingStatus.bind(null, bookingId);
+  const formRef = useRef<HTMLFormElement>(null);
 
   return (
-    <form action={action}>
+    <form ref={formRef} action={action}>
+      <input type="hidden" name="bookingId" value={bookingId} />
       <select
         name="status"
         defaultValue={status}
-        onChange={(e) => e.target.form?.requestSubmit()}
-        className={`rounded-full border-0 px-3 py-1 text-xs font-semibold ${BOOKING_STATUS_COLORS[status] ?? "bg-zinc-100 text-zinc-700"}`}
+        onChange={() => formRef.current?.requestSubmit()}
+        className={`rounded-full border-0 px-3 py-1 text-xs font-semibold cursor-pointer ${BOOKING_STATUS_COLORS[status] ?? "bg-zinc-100 text-zinc-700"}`}
       >
         {STATUSES.map((s) => (
           <option key={s} value={s}>
