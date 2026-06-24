@@ -205,6 +205,14 @@ function ListingsTab({ listings }: { listings: AdminListing[] }) {
                   >
                     ดู
                   </Link>
+                  {listing.saleMode !== "WHOLE" && (
+                    <Link
+                      href={`/admin/listings/${listing.id}/subdivision`}
+                      className="font-medium text-primary-700 hover:underline"
+                    >
+                      จัดการแปลง
+                    </Link>
+                  )}
                   <form
                     action={deleteListing.bind(null, listing.id)}
                     onSubmit={(e) => {
