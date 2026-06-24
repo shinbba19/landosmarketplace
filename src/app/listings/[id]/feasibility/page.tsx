@@ -3,8 +3,6 @@ import { prisma } from "@/lib/prisma";
 import { FeasibilityForm } from "@/components/FeasibilityForm";
 import { FeasibilityResult } from "@/components/FeasibilityResult";
 import { runFeasibility } from "@/lib/actions/feasibility";
-import { PLOT_LABELS } from "@/lib/subdivision";
-import { SQ_WAH_PER_RAI } from "@/lib/feasibility";
 
 export default async function FeasibilityPage({
   params,
@@ -23,23 +21,23 @@ export default async function FeasibilityPage({
 
   if (!listing) notFound();
 
-  const plots = listing.subdivision?.plots ?? [];
-  const numberOfPlots = plots.length || PLOT_LABELS.length;
-  const pricePerSqWah = plots.length
-    ? Math.round(
-        plots.reduce((sum, p) => sum + (p.area > 0 ? p.price / p.area : 0), 0) / plots.length
-      )
-    : Math.round(listing.wholeLandPrice / (listing.landArea * SQ_WAH_PER_RAI));
-
-  const defaults = {
-    landArea: listing.landArea,
-    wholeLandPrice: listing.wholeLandPrice,
-    wholeLandSalePrice: listing.wholeLandPrice,
-    numberOfPlots,
-    pricePerSqWah,
-  };
-
   const latestAnalysis = listing.feasibilities[0];
+
+  const defaults = latestAnalysis
+    ? {
+        landArea: latestAnalysis.landArea,
+        wholeLandPrice: latestAnalysis.wholeLandPrice,
+        wholeLandSalePrice: latestAnalysis.wholeLandSalePrice,
+        numberOfPlots: latestAnalysis.numberOfPlots,
+        pricePerSqWah: latestAnalysis.pricePerSqWah,
+      }
+    : {
+        landArea: listing.landArea,
+        wholeLandPrice: listing.wholeLandPrice,
+        wholeLandSalePrice: 0,
+        numberOfPlots: 0,
+        pricePerSqWah: 0,
+      };
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
