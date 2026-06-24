@@ -33,8 +33,8 @@ export default async function FeasibilityPage({
       }
     : {
         landArea: listing.landArea,
-        wholeLandPrice: listing.wholeLandPrice,
-        wholeLandSalePrice: 0,
+        wholeLandPrice: 0,
+        wholeLandSalePrice: listing.wholeLandPrice,
         numberOfPlots: 0,
         pricePerSqWah: 0,
       };
